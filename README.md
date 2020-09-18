@@ -1,2 +1,2 @@
-# SYSC3010_Rodrigo_Fierro
+# SYSC3010_rodrigo_fierro
 SYSC 3010
