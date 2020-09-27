@@ -1,8 +1,9 @@
 from sense_emu import SenseHat
-import time
+from time import sleep
 
 s = SenseHat()
 s.low_light = True
+
 
 g = (0, 255, 0)
 y = (255, 255, 0)
@@ -40,10 +41,24 @@ def letter_f():
     ]
     return logo
 
+
+letters = [letter_r(), letter_f()]
+
+
+s.clear()  # clear the screen
+
+count = 0  # keep track of what letter to show next
+
 while True:
-    time.sleep(.75)
-    s.set_pixels(letter_r())
-    time.sleep(.75)
-    s.set_pixels(letter_f())
+    for event in s.stick.get_events():
+        # Check if the joystick was pressed
+        if event.action == "pressed":
+
+            s.set_pixels(letters[count % len(letters)])
+
+            # increment count
+            count += 1
+
+
 
 
