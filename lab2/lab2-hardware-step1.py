@@ -1,8 +1,6 @@
 from sense_emu import SenseHat
-from time import sleep
 
 s = SenseHat()
-s.low_light = True
 
 
 g = (0, 255, 0)
