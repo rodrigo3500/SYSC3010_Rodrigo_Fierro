@@ -40,7 +40,6 @@ def letter_f():
     ]
     return logo
 
-
 while True:
     time.sleep(.75)
     s.set_pixels(letter_r())
