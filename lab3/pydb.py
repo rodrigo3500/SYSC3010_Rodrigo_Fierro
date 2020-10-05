@@ -1,24 +1,81 @@
 #!/usr/bin/env python3
 import sqlite3
-# connect to database file
-dbconnect = sqlite3.connect("mydb.db")
 
-# If we want to access columns by name we need to set
-# row_factory to sqlite3.Row class
-dbconnect.row_factory = sqlite3.Row
+# Create temporary database
+connection = sqlite3.connect('mydb.db')
 
-#  we create a cursor to work with db
-cursor = dbconnect.cursor()
+# Create cursor
+c = connection.cursor()
 
-# execute insert statement
-cursor.execute('''insert into temps values ('2013-10-09',time('now'),"kitchen",2.1 )''')
-dbconnect.commit()
+#
+c.execute(""" CREATE TABLE IF NOT EXISTS temps(
+    tdate DATE,
+    ttime TIME,
+    zone TEXT,
+    temperature NUMERIC
+                    )""")
 
-# execute simple select statement
-cursor.execute('SELECT * FROM temps')
+data = [
+                ("date('now', '-1 day')", "time('now')", "kitchen", 20.6),
+                ("date('now', '-1 day')", "time('now')", "greenhouse", 26.3),
+                ("date('now', '-1 day')", "time('now')", "garage", 18.6),
+                ("date('now')", "time('now', '-12 hours')", "kitchen", 19.5),
+                ("date('now')", "time('now', '-12 hours')", "greenhouse", 15.1),
+                ("date('now')", "time('now', '-12 hours')", "kitchen", 18.1),
+                ("date('now')", "time('now')", "kitchen", 21.2),
+                ("date('now')", "time('now')", "greenhouse", 27.1),
+                ("date('now')", "time('now')", "garage", 19.1)
+                ]
 
-# print data
-for row in cursor:
-    print(row['tdate'], row['ttime'], row['zone'], row['temperature'])
-# close the connection
-dbconnect.close()
+# Execute multiple commands
+c.executemany("INSERT INTO temps VALUES(?, ?, ?,? ) ; ", data)
+
+# Query the database
+c.execute("SELECT * FROM temps")
+
+# Commit our commands
+connection.commit()
+
+# Print the results
+print(c.fetchall())
+
+
+
+
+
+
+# ----------------------- PART 4 --------------------------------------
+
+c.execute(""" CREATE TABLE IF NOT EXISTS sensors( 
+    sensorID INTEGER PRIMARY KEY ,
+    type TEXT,
+    zone TEXT
+                    )""")
+
+data = [
+                (1, "door", "kitchen"),
+                (2, "temperature", "kitchen"),
+                (3, "door", "garage"),
+                (4, "motion", "garage"),
+                (5, "temperature", "garage"),
+                ]
+
+
+
+# Execute multiple commands
+c.executemany("INSERT INTO sensors VALUES(?, ?, ? ) ; ", data)
+
+
+# Query the database
+c.execute("SELECT * FROM sensors")
+
+# Commit our commands
+connection.commit()
+
+# Print the results
+print(c.fetchall())
+
+
+
+# Close our connection
+connection.close()
