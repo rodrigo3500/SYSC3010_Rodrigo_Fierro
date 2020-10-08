@@ -58,5 +58,8 @@ while True:
             count += 1
 
 
-
+"""
+change letters to TA
+only change every second time you change button
+"""
 
